@@ -1,5 +1,4 @@
 name: Build and Deploy Order Service to AKS
-
 on:
   workflow_dispatch:
   push:
@@ -8,10 +7,6 @@ on:
     paths:
       - 'order-service/**'
   pull_request:
-    branches:
-      - main
-    paths:
-      - 'order-service/**'
 
 env:
   REGISTRY: aksdemocri.azurecr.io
