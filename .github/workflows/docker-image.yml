@@ -54,3 +54,15 @@ jobs:
       run: |
         az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
 
+    - name: Deploy to AKS
+      run: |
+        cd order-service
+        # Update the image in the deployment YAML
+        sed -i 's|image: aksdemocri.azurecr.io/order-service:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|' Kubernetes-Deployment.yaml
+        kubectl apply -f Kubernetes-Deployment.yaml -n ${{ env.NAMESPACE }}
+
+    - name: Verify deployment
+      run: |
+        kubectl rollout status deployment/order-service -n ${{ env.NAMESPACE }}
+
+
