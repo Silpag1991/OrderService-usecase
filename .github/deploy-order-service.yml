@@ -46,33 +46,7 @@ jobs:
         mvn clean package -DskipTests
 
     - name: Login to Azure
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Login to ACR
-      run: |
-        az acr login --name aksdemocri
-
-    - name: Build and push Docker image
-      run: |
-        cd order-service
-        docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
-        docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-        docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-
-    - name: Get AKS credentials
-      run: |
-        az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
-
-    - name: Deploy to AKS
-      run: |
-        cd order-service
-        # Update the image in the deployment YAML
-        sed -i 's|image: aksdemocri.azurecr.io/order-service:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|' Kubernetes-Deployment.yaml
-        kubectl apply -f Kubernetes-Deployment.yaml -n ${{ env.NAMESPACE }}
-
-    - name: Verify deployment
-      run: |
-        kubectl rollout status deployment/order-service -n ${{ env.NAMESPACE }}
+   
