@@ -11,7 +11,7 @@ env:
   REGISTRY: aksdemocri.azurecr.io
   IMAGE_NAME: order-service
   CLUSTER_NAME: aks-demo-cluster
-  RESOURCE_GROUP: Aks-demoRg1
+  RESOURCE_GROUP: aksdemoRg
   NAMESPACE: default
   
 jobs:
@@ -49,3 +49,8 @@ jobs:
         docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+    - name: Get AKS credentials
+      run: |
+        az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
+
