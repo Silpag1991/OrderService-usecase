@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: <ACR_LOGIN_SERVER>/order-service:1.0
+        image: aksdemocri.azurecr.io/order-service:1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
