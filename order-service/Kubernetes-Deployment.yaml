@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,9 +15,11 @@ spec:
       labels:
         app: order-service
     spec:
+      imagePullSecrets:
+      - name: acr-secret
       containers:
       - name: order-service
-        image: aksdemocri.azurecr.io/order-service:1.0
+        image: aksdemocri.azurecr.io/order-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -30,7 +33,7 @@ spec:
           httpGet:
             path: /actuator/health
             port: 8080
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 5
           failureThreshold: 3
@@ -38,7 +41,7 @@ spec:
           httpGet:
             path: /actuator/health/readiness
             port: 8080
-          initialDelaySeconds: 20
+          initialDelaySeconds: 40
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
@@ -65,3 +68,5 @@ spec:
     targetPort: 8080
     protocol: TCP
     name: http
+
+
